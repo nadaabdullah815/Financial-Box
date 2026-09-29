@@ -1,0 +1,128 @@
+@model FinancialBox.ViewModels.BoxViewModel
+@{
+    ViewData["Title"] = "تعديل الصندوق";
+    var balanceText = Model.Balance.ToString("N2");
+    var currencyText = Model.Currency == "USD" ? "دولار أمريكي (USD)" : "ليرة سورية (SYP)";
+}
+
+<div class="container py-5" style="max-width: 980px;">
+    <div class="row g-4 align-items-start">
+
+        <!-- النموذج -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm form-card">
+                <div class="card-body p-4 p-md-5">
+
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-circle-lg bg-warning-subtle text-warning me-3">
+                            <i class="bi bi-pencil-square fs-3"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-1">تعديل الصندوق</h4>
+                            <p class="text-muted small mb-0">يمكنك تغيير اسم الصندوق فقط</p>
+                        </div>
+                    </div>
+
+                    <form asp-action="Edit" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3 small"></div>
+                        <input asp-for="Id" type="hidden" />
+                        <input asp-for="Currency" type="hidden" />
+
+                        <!-- اسم الصندوق -->
+                        <div class="mb-4">
+                            <label asp-for="Name" class="form-label fw-semibold">اسم الصندوق</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-tag"></i></span>
+                                <input asp-for="Name" class="form-control" maxlength="50" autofocus />
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <!-- العملة (للعرض فقط) -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">العملة</label>
+                            <div class="locked-field">
+                                <span><i class="bi bi-currency-exchange me-2"></i>@currencyText</span>
+                                <i class="bi bi-lock-fill text-muted"></i>
+                            </div>
+                            <small class="text-muted">لا يمكن تغيير عملة الصندوق بعد إنشائه، حفاظًا على دقة الأرصدة والحوالات.</small>
+                        </div>
+
+                        <!-- الرصيد (للعرض فقط) -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">الرصيد الحالي</label>
+                            <div class="locked-field">
+                                <span class="fs-5 fw-bold text-success">@balanceText <small class="text-muted fw-normal">@Model.Currency</small></span>
+                                <i class="bi bi-lock-fill text-muted"></i>
+                            </div>
+                            <small class="text-muted">لا يمكن تعديل الرصيد يدويًا؛ فهو يتغيّر تلقائيًا من خلال الإيرادات والمصاريف والحوالات.</small>
+                        </div>
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" id="saveBtn" class="btn btn-warning btn-lg flex-grow-1 text-white fw-semibold" disabled>
+                                <i class="bi bi-check-lg me-1"></i> حفظ التعديلات
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-4">إلغاء</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- المعاينة الحية -->
+        <div class="col-lg-5">
+            <div class="preview-sticky">
+                <p class="text-muted small fw-semibold mb-2"><i class="bi bi-eye me-1"></i> معاينة الصندوق</p>
+                <div class="card border-0 shadow-sm preview-card">
+                    <div class="card-body p-4">
+                        <div class="icon-circle-lg bg-success-subtle text-success mb-3">
+                            <i class="bi bi-wallet-fill fs-3"></i>
+                        </div>
+                        <span class="badge bg-light text-dark border mb-2">@Model.Currency</span>
+                        <h5 class="fw-bold mb-1" id="previewName">@Model.Name</h5>
+                        <div class="fs-3 fw-bold text-success">@balanceText</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .form-card, .preview-card { border-radius: 18px; }
+    .icon-circle-lg {
+        width: 64px; height: 64px; border-radius: 18px;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .locked-field {
+        display: flex; align-items: center; justify-content: space-between;
+        background: #f8f9fa; border: 1px dashed #ced4da; border-radius: 10px;
+        padding: .7rem 1rem; margin-bottom: .3rem;
+    }
+    .preview-card { border-right: 5px solid #ffc107 !important; }
+    @@media (min-width: 992px) {
+        .preview-sticky { position: sticky; top: 90px; }
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const nameInput = document.getElementById('Name');
+            const saveBtn = document.getElementById('saveBtn');
+            const previewName = document.getElementById('previewName');
+            const original = nameInput.value.trim();
+
+            function update() {
+                const current = nameInput.value.trim();
+                previewName.textContent = current || 'اسم الصندوق';
+                saveBtn.disabled = !current || current === original;
+            }
+
+            nameInput.addEventListener('input', update);
+            update();
+        });
+    </script>
+}

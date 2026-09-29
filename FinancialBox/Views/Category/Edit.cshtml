@@ -1,0 +1,83 @@
+@model FinancialBox.ViewModels.CategoryViewModel
+@{ ViewData["Title"] = "تعديل التصنيف"; }
+
+<div class="container py-5 d-flex justify-content-center">
+    <div class="card shadow-sm border-0" style="max-width: 480px; width: 100%; border-radius: 18px;">
+        <div class="card-body p-4 p-md-5">
+
+            <div class="text-center mb-4">
+                <div class="icon-circle-lg bg-warning-subtle text-warning mx-auto mb-3">
+                    <i class="bi bi-pencil-square fs-3"></i>
+                </div>
+                <h4 class="fw-bold mb-1">تعديل التصنيف</h4>
+                <p class="text-muted small mb-0">قم بتحديث اسم التصنيف أو نوعه</p>
+            </div>
+
+            <form asp-action="Edit" method="post">
+                <div asp-validation-summary="All" class="text-danger mb-3 small"></div>
+                <input asp-for="Id" type="hidden" />
+
+                <!-- اختيار نوع التصنيف كأزرار Toggle -->
+                <label class="form-label fw-semibold mb-2">نوع التصنيف</label>
+                <div class="btn-group w-100 mb-4" role="group">
+                    <input type="radio" class="btn-check" name="Type" id="typeIncome" value="Income" autocomplete="off"
+                           checked="@(Model.Type == "Income")">
+                    <label class="btn btn-outline-success py-2" for="typeIncome">
+                        <i class="bi bi-graph-up-arrow me-1"></i> إيراد
+                    </label>
+
+                    <input type="radio" class="btn-check" name="Type" id="typeExpense" value="Expense" autocomplete="off"
+                           checked="@(Model.Type != "Income")">
+                    <label class="btn btn-outline-danger py-2" for="typeExpense">
+                        <i class="bi bi-graph-down-arrow me-1"></i> مصروف
+                    </label>
+                </div>
+
+                <!-- اسم التصنيف -->
+                <div class="mb-4">
+                    <label asp-for="Name" class="form-label fw-semibold">اسم التصنيف</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="bi bi-tag"></i></span>
+                        <input asp-for="Name" class="form-control" autofocus />
+                    </div>
+                    <span asp-validation-for="Name" class="text-danger small"></span>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-warning flex-grow-1 py-2 fw-semibold text-white">
+                        <i class="bi bi-check-lg me-1"></i> حفظ التعديلات
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary py-2 px-4">إلغاء</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .icon-circle-lg {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-check:checked + .btn-outline-success {
+        background-color: #146c43;
+        border-color: #146c43;
+        color: #fff;
+    }
+
+    .btn-check:checked + .btn-outline-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: #fff;
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

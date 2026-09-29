@@ -1,0 +1,188 @@
+@model FinancialBox.ViewModels.BoxViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "صندوق جديد";
+    var currency = string.IsNullOrEmpty(Model.Currency) ? "SYP" : Model.Currency;
+}
+
+<div class="container py-5" style="max-width: 980px;">
+    <div class="row g-4 align-items-start">
+
+        <!-- النموذج -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm form-card">
+                <div class="card-body p-4 p-md-5">
+
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-circle-lg bg-success-subtle text-success me-3">
+                            <i class="bi bi-wallet2 fs-3"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-1">إنشاء صندوق جديد</h4>
+                            <p class="text-muted small mb-0">أضف صندوقًا لتتبع مصدر أموالك أو الغرض منها</p>
+                        </div>
+                    </div>
+
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3 small"></div>
+
+                        <!-- اسم الصندوق -->
+                        <div class="mb-4">
+                            <label asp-for="Name" class="form-label fw-semibold">اسم الصندوق</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-pencil-square"></i></span>
+                                <input asp-for="Name" class="form-control" maxlength="50"
+                                       placeholder="مثال: صندوق الادخار" autofocus />
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <!-- العملة -->
+                        <label class="form-label fw-semibold mb-2">العملة</label>
+                        <div class="row g-3 mb-1">
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="Currency" id="currencySYP" value="SYP"
+                                       checked="@(currency == "SYP")" />
+                                <label class="currency-option card text-center p-3 h-100" for="currencySYP">
+                                    <i class="bi bi-cash-coin fs-3 mb-1"></i>
+                                    <span class="fw-bold">ليرة سورية</span>
+                                    <span class="text-muted small">SYP</span>
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="Currency" id="currencyUSD" value="USD"
+                                       checked="@(currency == "USD")" />
+                                <label class="currency-option card text-center p-3 h-100" for="currencyUSD">
+                                    <i class="bi bi-currency-dollar fs-3 mb-1"></i>
+                                    <span class="fw-bold">دولار أمريكي</span>
+                                    <span class="text-muted small">USD</span>
+                                </label>
+                            </div>
+                        </div>
+                        <span asp-validation-for="Currency" class="text-danger small d-block mb-3"></span>
+
+                        <!-- الرصيد الافتتاحي -->
+                        <div class="mb-4 mt-3">
+                            <label asp-for="Balance" class="form-label fw-semibold">الرصيد الافتتاحي</label>
+                            <div class="input-group input-group-lg">
+                                <input asp-for="Balance" type="number" step="0.01" min="0" class="form-control"
+                                       value="@Model.Balance.ToString(CultureInfo.InvariantCulture)" />
+                                <span class="input-group-text fw-bold" id="currencyLabel">@currency</span>
+                            </div>
+                            <span asp-validation-for="Balance" class="text-danger small"></span>
+
+                            <div class="d-flex flex-wrap gap-2 mt-2" id="quickAmounts"></div>
+                        </div>
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-success btn-lg flex-grow-1">
+                                <i class="bi bi-check-lg me-1"></i> إنشاء الصندوق
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-4">إلغاء</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- المعاينة الحية -->
+        <div class="col-lg-5">
+            <div class="preview-sticky">
+                <p class="text-muted small fw-semibold mb-2"><i class="bi bi-eye me-1"></i> معاينة الصندوق</p>
+                <div class="card border-0 shadow-sm preview-card">
+                    <div class="card-body p-4">
+                        <div class="icon-circle-lg bg-success-subtle text-success mb-3">
+                            <i class="bi bi-wallet-fill fs-3"></i>
+                        </div>
+                        <span class="badge bg-light text-dark border mb-2" id="previewCurrency">@currency</span>
+                        <h5 class="fw-bold mb-1" id="previewName">اسم الصندوق</h5>
+                        <div class="fs-3 fw-bold text-success" id="previewBalance">0.00</div>
+                    </div>
+                </div>
+                <p class="text-muted small mt-3 mb-0">
+                    <i class="bi bi-info-circle me-1"></i>
+                    يتغير رصيد الصندوق لاحقًا من خلال تسجيل الإيرادات والمصاريف والحوالات.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .form-card, .preview-card { border-radius: 18px; }
+    .icon-circle-lg {
+        width: 64px; height: 64px; border-radius: 18px;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .currency-option {
+        border: 2px solid #e9ecef; border-radius: 14px; cursor: pointer;
+        transition: .15s ease; align-items: center;
+    }
+    .currency-option:hover { border-color: #146c43; transform: translateY(-2px); }
+    .btn-check:checked + .currency-option {
+        border-color: #146c43; background: #e7f5ec; color: #146c43;
+        box-shadow: 0 6px 16px rgba(20,108,67,.18);
+    }
+    .preview-card { border-right: 5px solid #146c43 !important; }
+    @@media (min-width: 992px) {
+        .preview-sticky { position: sticky; top: 90px; }
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const nameInput = document.getElementById('Name');
+            const balanceInput = document.getElementById('Balance');
+            const currencyRadios = document.querySelectorAll('input[name="Currency"]');
+            const quickBox = document.getElementById('quickAmounts');
+
+            const quickSets = {
+                SYP: [100000, 500000, 1000000, 5000000],
+                USD: [50, 100, 500, 1000]
+            };
+
+            const fmt = n => Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const currentCurrency = () => (Array.from(currencyRadios).find(r => r.checked) || {}).value || 'SYP';
+
+            function renderQuickAmounts() {
+                const cur = currentCurrency();
+                quickBox.innerHTML = '';
+                (quickSets[cur] || []).forEach(v => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'btn btn-sm btn-outline-success';
+                    b.textContent = v.toLocaleString('en-US');
+                    b.addEventListener('click', () => { balanceInput.value = v; updatePreview(); });
+                    quickBox.appendChild(b);
+                });
+                const reset = document.createElement('button');
+                reset.type = 'button';
+                reset.className = 'btn btn-sm btn-outline-secondary';
+                reset.textContent = 'تصفير';
+                reset.addEventListener('click', () => { balanceInput.value = 0; updatePreview(); });
+                quickBox.appendChild(reset);
+            }
+
+            function updatePreview() {
+                const cur = currentCurrency();
+                document.getElementById('previewName').textContent = nameInput.value.trim() || 'اسم الصندوق';
+                document.getElementById('previewCurrency').textContent = cur;
+                document.getElementById('currencyLabel').textContent = cur;
+                document.getElementById('previewBalance').textContent = fmt(parseFloat(balanceInput.value) || 0);
+            }
+
+            nameInput.addEventListener('input', updatePreview);
+            balanceInput.addEventListener('input', updatePreview);
+            currencyRadios.forEach(r => r.addEventListener('change', function () {
+                renderQuickAmounts();
+                updatePreview();
+            }));
+
+            renderQuickAmounts();
+            updatePreview();
+        });
+    </script>
+}

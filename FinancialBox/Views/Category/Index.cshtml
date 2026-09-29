@@ -1,0 +1,184 @@
+@model List<FinancialBox.Models.Category>
+@{ ViewData["Title"] = "التصنيفات"; }
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold text-success mb-1"><i class="bi bi-tags-fill me-2"></i>التصنيفات</h3>
+        <p class="text-muted mb-0">إدارة تصنيفات الإيرادات والمصاريف الخاصة بك</p>
+    </div>
+    <a asp-action="Create" class="btn btn-success">
+        <i class="bi bi-plus-lg me-1"></i> تصنيف جديد
+    </a>
+</div>
+
+    <!-- تصنيفات الإيرادات -->
+    <div class="d-flex align-items-center mb-3">
+        <div class="border-4 border-success border-start ps-3">
+            <h5 class="fw-bold text-success mb-0"><i class="bi bi-graph-up-arrow me-1"></i> تصنيفات الإيرادات</h5>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-5">
+        
+
+        @foreach (var cat in Model.Where(c => c.Type == FinancialBox.Models.Enum.CategoryType.Income))
+        {
+            <div class="col-6 col-md-3 col-lg-2">
+                <div class="card h-100 text-center py-4 category-card shadow-sm position-relative">
+                    @if (cat.UserId != null)
+                    {
+                        <span class="badge bg-success position-absolute top-0 start-0 m-2">خاص</span>
+                    }
+                    <div class="mx-auto mb-2 icon-circle bg-success-subtle text-success">
+                        <i class="bi @GetIcon(cat.Name) fs-4"></i>
+                    </div>
+                    <span class="fw-semibold small">@cat.Name</span>
+
+                    @if (cat.UserId != null)
+                    {
+                        <div class="d-flex justify-content-center gap-2 mt-2">
+                            <a asp-action="Edit" asp-route-id="@cat.Id" class="btn btn-sm btn-outline-secondary" title="تعديل">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-delete-category"
+                                    data-id="@cat.Id" data-name="@cat.Name" title="حذف">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- تصنيفات المصاريف -->
+    <div class="d-flex align-items-center mb-3">
+        <div class="border-4 border-danger border-start ps-3">
+            <h5 class="fw-bold text-danger mb-0"><i class="bi bi-graph-down-arrow me-1"></i> تصنيفات المصاريف</h5>
+        </div>
+    </div>
+
+    <div class="row g-3">
+       
+        @foreach (var cat in Model.Where(c => c.Type == FinancialBox.Models.Enum.CategoryType.Expense))
+        {
+            <div class="col-6 col-md-3 col-lg-2">
+                <div class="card h-100 text-center py-4 category-card shadow-sm position-relative">
+                    @if (cat.UserId != null)
+                    {
+                        <span class="badge bg-success position-absolute top-0 start-0 m-2">خاص</span>
+                    }
+                    <div class="mx-auto mb-2 icon-circle bg-danger-subtle text-danger">
+                        <i class="bi @GetIcon(cat.Name) fs-4"></i>
+                    </div>
+                    <span class="fw-semibold small">@cat.Name</span>
+
+                    @if (cat.UserId != null)
+                    {
+                        <div class="d-flex justify-content-center gap-2 mt-2">
+                            <a asp-action="Edit" asp-route-id="@cat.Id" class="btn btn-sm btn-outline-secondary" title="تعديل">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-delete-category"
+                                    data-id="@cat.Id" data-name="@cat.Name" title="حذف">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Modal تأكيد الحذف -->
+<div class="modal fade" id="deleteCategoryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>تأكيد الحذف</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+               هل أنت متأكد من حذف تصنيف "<span id="deleteCategoryName" class="fw-bold"></span>"؟
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">إلغاء</button>
+                <form id="deleteCategoryForm" asp-action="Delete" method="post">
+                    <input type="hidden" name="id" id="deleteCategoryId" />
+                    <button type="submit" class="btn btn-danger">نعم </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetIcon(string name) => name switch
+    {
+        "راتب" => "bi-briefcase-fill",
+        "عمل حر" => "bi-laptop-fill",
+        "استثمار" => "bi-graph-up",
+        "إضافي" => "bi-plus-circle-fill",
+        "طعام" => "bi-cup-hot-fill",
+        "أدوات منزلية" => "bi-house-heart-fill",
+        "فاتورة" => "bi-receipt",
+        "مواصلات" => "bi-car-front-fill",
+        _ => "bi-tag-fill"
+    };
+}
+
+<style>
+    .icon-circle {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .category-card {
+        border-radius: 16px;
+        border: 1px solid #eee;
+        transition: 0.2s ease;
+    }
+
+    .category-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important;
+    }
+
+    .category-add-card {
+        border-radius: 16px;
+        border-style: dashed !important;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .category-add-card:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteButtons = document.querySelectorAll('.btn-delete-category');
+            const modal = new bootstrap.Modal(document.getElementById('deleteCategoryModal'));
+
+            deleteButtons.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    const name = this.getAttribute('data-name');
+
+                    document.getElementById('deleteCategoryId').value = id;
+                    document.getElementById('deleteCategoryName').textContent = name;
+
+                    modal.show();
+                });
+            });
+        });
+    </script>
+}

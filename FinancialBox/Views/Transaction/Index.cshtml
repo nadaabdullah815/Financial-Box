@@ -1,0 +1,61 @@
+@model List<FinancialBox.Models.Transaction>
+@{ ViewData["Title"] = "العمليات المالية"; }
+
+<div class="container mt-4">
+    <div class="page-header">
+        <h2>📋 العمليات المالية</h2>
+        <a asp-action="Create" asp-route-boxId="@ViewBag.BoxId" class="btn btn-primary">+ عملية جديدة</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <h5>ما في عمليات مسجلة بهاد الصندوق بعد</h5>
+        </div>
+    }
+    else
+    {
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>التاريخ</th>
+                    <th>التصنيف</th>
+                    <th>الوصف</th>
+                    <th>النوع</th>
+                    <th>المبلغ</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model)
+                {
+                    <tr>
+                        <td>@t.Date.ToString("yyyy-MM-dd")</td>
+                        <td>@t.Category.Name</td>
+                        <td>@t.Description</td>
+                        <td>
+                            @if (t.Category.Type == FinancialBox.Models.Enum.CategoryType.Income)
+                            {
+                                <span class="badge bg-success">إيراد</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">مصروف</span>
+                            }
+                        </td>
+                        <td>@t.Amount.ToString("N2")</td>
+                        <td>
+                            <form asp-action="Delete" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@t.Id" />
+                                <input type="hidden" name="boxId" value="@ViewBag.BoxId" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">حذف</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <a asp-controller="Box" asp-action="Index" class="btn btn-outline-secondary mt-2">رجوع للصناديق</a>
+</div>
