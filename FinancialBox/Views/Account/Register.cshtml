@@ -1,36 +1,140 @@
 @model FinancialBox.ViewModels.RegisterViewModel
 @{ ViewData["Title"] = "إنشاء حساب"; }
 
-<div class="auth-wrapper">
-    <div class="auth-card">
-        <h3 class="text-center mb-4"> إنشاء حساب جديد</h3>
-        <form asp-action="Register" method="post" autocomplete="off" >
-            <div asp-validation-summary="All" class="text-danger mb-3"></div>
-
-            <div class="mb-3">
-                <label asp-for="FullName" class="form-label">الاسم الكامل</label>
-                <input asp-for="FullName" class="form-control" placeholder="الاسم الكامل" />
-                <span asp-validation-for="FullName" class="text-danger small"></span>
+<div class="login-page">
+    <div class="row g-0 min-vh-100">
+        <!-- اللوحة التعريفية -->
+        <div class="col-lg-6 d-none d-lg-flex brand-panel">
+            <div class="brand-content text-white text-center px-5">
+                <div class="brand-icon mb-4"><i class="bi bi-piggy-bank-fill"></i></div>
+                <h2 class="fw-bold mb-3">ابدأ رحلتك المالية</h2>
+                <p class="lead mb-4">أنشئ حسابك الآن، وستحصل تلقائيًا على أربعة صناديق جاهزة لتنظيم أموالك من أول يوم.</p>
+                <div class="d-flex justify-content-center gap-4 mt-5">
+                    <div class="feature-pill"><i class="bi bi-lightning-charge-fill me-1"></i> إعداد فوري</div>
+                    <div class="feature-pill"><i class="bi bi-shield-check me-1"></i> بياناتك محمية</div>
+                </div>
             </div>
+            <div class="circle c1"></div><div class="circle c2"></div><div class="circle c3"></div>
+        </div>
 
-            <div class="mb-3">
-                <label asp-for="Email" class="form-label">البريد الإلكتروني</label>
-                <input asp-for="Email" class="form-control" placeholder="example@email.com" autocomplete="off" />
-                <span asp-validation-for="Email" class="text-danger small"></span>
+        <!-- الفورم -->
+        <div class="col-lg-6 d-flex align-items-center justify-content-center py-5">
+            <div style="max-width: 400px; width: 100%;" class="px-4">
+                <div class="text-center mb-4 d-lg-none">
+                    <div class="brand-icon-sm mb-2"><i class="bi bi-wallet2"></i></div>
+                    <h4 class="fw-bold">الصندوق المالي</h4>
+                </div>
+
+                <h3 class="fw-bold mb-1">إنشاء حساب جديد</h3>
+                <p class="text-muted mb-4">أدخل بياناتك لإنشاء حسابك</p>
+
+                <form asp-action="Register" method="post" autocomplete="off">
+                    <div asp-validation-summary="All" class="text-danger mb-3 small"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="FullName" class="form-label fw-semibold">الاسم الكامل</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
+                            <input asp-for="FullName" class="form-control" placeholder="الاسم الكامل" />
+                        </div>
+                        <span asp-validation-for="FullName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label fw-semibold">البريد الإلكتروني</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
+                            <input asp-for="Email" class="form-control" placeholder="example@email.com" autocomplete="off" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Password" class="form-label fw-semibold">كلمة المرور</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
+                            <input asp-for="Password" type="password" class="form-control" id="passwordField" autocomplete="new-password" />
+                            <button type="button" class="btn btn-outline-secondary" id="togglePassword"><i class="bi bi-eye"></i></button>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                        <div class="progress mt-2" style="height: 5px;">
+                            <div class="progress-bar" id="strengthBar" style="width: 0%;"></div>
+                        </div>
+                        <small class="text-muted" id="strengthLabel"></small>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-lg w-100 mb-3">
+                        <i class="bi bi-person-plus-fill me-1"></i> إنشاء الحساب
+                    </button>
+
+                    <p class="text-center text-muted small mb-0">
+                        لديك حساب بالفعل؟ <a asp-action="Login" class="fw-semibold text-decoration-none">تسجيل الدخول</a>
+                    </p>
+                </form>
             </div>
-
-            <div class="mb-4">
-                <label asp-for="Password" class="form-label">كلمة السر</label>
-                <input asp-for="Password" class="form-control" autocomplete="new-password" />
-                <span asp-validation-for="Password" class="text-danger small"></span>
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100">إنشاء الحساب</button>
-        </form>
-        <p class="text-center mt-3 mb-0">عندك حساب؟ <a asp-action="Login">سجل دخول</a></p>
+        </div>
     </div>
 </div>
 
+<style>
+    .brand-panel {
+        position: relative; overflow: hidden;
+        background: linear-gradient(160deg, #146c43 0%, #0f5132 100%);
+        align-items: center; justify-content: center;
+    }
+    .brand-content { position: relative; z-index: 2; }
+    .brand-icon {
+        width: 90px; height: 90px; border-radius: 24px; background: rgba(255,255,255,.15);
+        display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto;
+    }
+    .brand-icon-sm {
+        width: 56px; height: 56px; border-radius: 16px; background: #e7f5ec; color: #146c43;
+        display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin: 0 auto;
+    }
+    .feature-pill {
+        background: rgba(255,255,255,.12); border-radius: 30px; padding: .5rem 1.1rem; font-size: .85rem;
+    }
+    .circle { position: absolute; border-radius: 50%; background: rgba(255,255,255,.08); }
+    .c1 { width: 260px; height: 260px; top: -60px; right: -80px; }
+    .c2 { width: 180px; height: 180px; bottom: -50px; left: -40px; }
+    .c3 { width: 100px; height: 100px; bottom: 30%; right: 10%; }
+</style>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const field = document.getElementById('passwordField');
+            const icon = this.querySelector('i');
+            const isPassword = field.type === 'password';
+            field.type = isPassword ? 'text' : 'password';
+            icon.className = isPassword ? 'bi bi-eye-slash' : 'bi bi-eye';
+        });
+
+        const pwd = document.getElementById('passwordField');
+        const bar = document.getElementById('strengthBar');
+        const label = document.getElementById('strengthLabel');
+
+        pwd.addEventListener('input', function () {
+            const val = this.value;
+            let score = 0;
+            if (val.length >= 6) score++;
+            if (val.length >= 10) score++;
+            if (/[0-9]/.test(val)) score++;
+            if (/[a-zA-Z]/.test(val) && /[A-Z]/.test(val)) score++;
+
+            const levels = [
+                { width: '0%', color: '#dc3545', text: '' },
+                { width: '25%', color: '#dc3545', text: 'ضعيفة' },
+                { width: '50%', color: '#fd7e14', text: 'متوسطة' },
+                { width: '75%', color: '#ffc107', text: 'جيدة' },
+                { width: '100%', color: '#146c43', text: 'قوية' }
+            ];
+            const l = levels[score];
+            bar.style.width = l.width;
+            bar.style.backgroundColor = l.color;
+            label.textContent = l.text;
+            label.style.color = l.color;
+        });
+    </script>
 }

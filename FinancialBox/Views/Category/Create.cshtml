@@ -13,7 +13,15 @@
                 <p class="text-muted small mb-0">أنشئ تصنيفًا خاصًا لتنظيم عملياتك المالية</p>
             </div>
 
+        @if (ViewBag.ReturnBoxId != null)
+        {
+            <a asp-controller="Transaction" asp-action="Create" asp-route-boxId="@ViewBag.ReturnBoxId"
+               class="btn btn-outline-secondary w-100 mb-3">
+                <i class="bi bi-arrow-right me-1"></i> رجوع لإضافة العملية
+            </a>
+        }
             <form asp-action="Create" method="post">
+                 <input type="hidden" asp-route-returnBoxId="@ViewBag.ReturnBoxId" name="returnBoxId" value="@ViewBag.ReturnBoxId" />
                 <div asp-validation-summary="All" class="text-danger mb-3 small"></div>
 
                 <!-- اختيار نوع التصنيف كأزرار Toggle -->

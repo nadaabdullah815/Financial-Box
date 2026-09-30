@@ -1,33 +1,101 @@
 @model FinancialBox.ViewModels.LoginViewModel
-@{ ViewData["Title"] = "تسجيل الدخول"; }
+@{ ViewData["Title"] = "تسجيل الدخول"; Layout = "_Layout"; }
 
-<div class="auth-wrapper">
-    <div class="auth-card">
-        <h3 class="text-center mb-4"> تسجيل الدخول</h3>
-        <form asp-action="Login" method="post" autocomplete="off">
-            <div asp-validation-summary="All" class="text-danger mb-3"></div>
-
-            <div class="mb-3">
-                <label asp-for="Email" class="form-label" >البريد الإلكتروني</label>
-                <input asp-for="Email" class="form-control" autocomplete="off" />
-                <span asp-validation-for="Email" class="text-danger small"></span>
+<div class="login-page">
+    <div class="row g-0 min-vh-100">
+        <!-- اللوحة التعريفية -->
+        <div class="col-lg-6 d-none d-lg-flex brand-panel">
+            <div class="brand-content text-white text-center px-5">
+                <div class="brand-icon mb-4"><i class="bi bi-wallet2"></i></div>
+                <h2 class="fw-bold mb-3">الصندوق المالي</h2>
+                <p class="lead mb-4">وثّق إيراداتك ومصاريفك بدقة، وأدر أموالك عبر صناديق متعددة بأمان تام.</p>
+                <div class="d-flex justify-content-center gap-4 mt-5">
+                    <div class="feature-pill"><i class="bi bi-shield-check me-1"></i> بياناتك محمية</div>
+                    <div class="feature-pill"><i class="bi bi-graph-up me-1"></i> تقارير دقيقة</div>
+                </div>
             </div>
+            <div class="circle c1"></div><div class="circle c2"></div><div class="circle c3"></div>
+        </div>
 
-            <div class="mb-3">
-                <label asp-for="Password" class="form-label">كلمة السر</label>
-                <input asp-for="Password" class="form-control" autocomplete="new-password" />
-                <span asp-validation-for="Password" class="text-danger small"></span>
+        <!-- الفورم -->
+        <div class="col-lg-6 d-flex align-items-center justify-content-center py-5">
+            <div style="max-width: 400px; width: 100%;" class="px-4">
+                <div class="text-center mb-4 d-lg-none">
+                    <div class="brand-icon-sm mb-2"><i class="bi bi-wallet2"></i></div>
+                    <h4 class="fw-bold">الصندوق المالي</h4>
+                </div>
+
+                <h3 class="fw-bold mb-1">تسجيل الدخول</h3>
+                <p class="text-muted mb-4">أهلًا بعودتك، أدخل بياناتك للمتابعة</p>
+
+                <form asp-action="Login" method="post">
+                    <div asp-validation-summary="All" class="text-danger mb-3 small"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label fw-semibold">البريد الإلكتروني</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
+                            <input asp-for="Email" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Password" class="form-label fw-semibold">كلمة المرور</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
+                            <input asp-for="Password" type="password" class="form-control" id="passwordField" />
+                            <button type="button" class="btn btn-outline-secondary" id="togglePassword"><i class="bi bi-eye"></i></button>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-lg w-100 mb-3">
+                        <i class="bi bi-box-arrow-in-left me-1"></i> تسجيل الدخول
+                    </button>
+
+                    <p class="text-center text-muted small mb-0">
+                        ليس لديك حساب؟ <a asp-action="Register" class="fw-semibold text-decoration-none">إنشاء حساب جديد</a>
+                    </p>
+                </form>
             </div>
-
-           
-             
-
-            <button type="submit" class="btn btn-primary w-100">دخول</button>
-        </form>
-        <p class="text-center mt-3 mb-0">ما عندك حساب؟ <a asp-action="Register">أنشئ حساب</a></p>
+        </div>
     </div>
 </div>
 
+<style>
+    .brand-panel {
+        position: relative; overflow: hidden;
+        background: linear-gradient(160deg, #146c43 0%, #0f5132 100%);
+        align-items: center; justify-content: center;
+    }
+    .brand-content { position: relative; z-index: 2; }
+    .brand-icon {
+        width: 90px; height: 90px; border-radius: 24px; background: rgba(255,255,255,.15);
+        display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto;
+    }
+    .brand-icon-sm {
+        width: 56px; height: 56px; border-radius: 16px; background: #e7f5ec; color: #146c43;
+        display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin: 0 auto;
+    }
+    .feature-pill {
+        background: rgba(255,255,255,.12); border-radius: 30px; padding: .5rem 1.1rem; font-size: .85rem;
+    }
+    .circle { position: absolute; border-radius: 50%; background: rgba(255,255,255,.08); }
+    .c1 { width: 260px; height: 260px; top: -60px; right: -80px; }
+    .c2 { width: 180px; height: 180px; bottom: -50px; left: -40px; }
+    .c3 { width: 100px; height: 100px; bottom: 30%; right: 10%; }
+</style>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const field = document.getElementById('passwordField');
+            const icon = this.querySelector('i');
+            const isPassword = field.type === 'password';
+            field.type = isPassword ? 'text' : 'password';
+            icon.className = isPassword ? 'bi bi-eye-slash' : 'bi bi-eye';
+        });
+    </script>
 }

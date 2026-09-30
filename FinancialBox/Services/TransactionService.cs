@@ -57,7 +57,7 @@ namespace FinancialBox.Services
                 {
                     Amount = amount,
                     Date = date,
-                    Description = description,
+                    Description = description ?? null,
                     BoxId = boxId,
                     CategoryId = categoryId
                 };

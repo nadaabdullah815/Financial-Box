@@ -20,34 +20,44 @@ namespace FinancialBox.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index()
+       public async Task<IActionResult> Index(int? returnBoxId)
+       {
+           var userId = _userManager.GetUserId(User)!;
+           var categories = await _categoryService.GetUserCategoriesAsync(userId);
+           ViewBag.ReturnBoxId = returnBoxId;
+           return View(categories);
+       }
+
+     [HttpGet]
+        public IActionResult Create(int? returnBoxId)
         {
-            var userId = _userManager.GetUserId(User)!;
-            var categories = await _categoryService.GetUserCategoriesAsync(userId);
-            return View(categories);
+            var model = new CategoryViewModel { Type = "Expense" };
+            ViewBag.ReturnBoxId = returnBoxId;
+            return View(model);
         }
-
-      [HttpGet]
-public IActionResult Create(string? type)
-{
-    var model = new CategoryViewModel {  Type = "Expense" };
-    return View(model);
-}
-
-        [HttpPost]
-        public async Task<IActionResult> Create(CategoryViewModel model)
+       [HttpPost]
+        public async Task<IActionResult> Create(CategoryViewModel model, int? returnBoxId)
         {
-            if (!ModelState.IsValid) return View(model);
-
+            if (!ModelState.IsValid)
+            {
+                ViewBag.ReturnBoxId = returnBoxId;
+                return View(model);
+            }
+        
             var userId = _userManager.GetUserId(User)!;
             var type = model.Type == "Income" ? CategoryType.Income : CategoryType.Expense;
             var (success, message) = await _categoryService.CreateAsync(userId, model.Name, type);
-
+        
             if (!success)
             {
                 ModelState.AddModelError("", message);
+                ViewBag.ReturnBoxId = returnBoxId;
                 return View(model);
             }
+        
+            if (returnBoxId.HasValue)
+                return RedirectToAction("Create", "Transaction", new { boxId = returnBoxId.Value });
+        
             return RedirectToAction(nameof(Index));
         }
 

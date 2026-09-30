@@ -41,15 +41,22 @@ namespace FinancialBox.Services
             return box;
         }
 
-        public async Task<bool> UpdateAsync(int id, string userId, string name, string currency)
+        public async Task<(bool Success, string Message)> UpdateAsync(int id, string userId, string name, string currency)
         {
             var box = await GetByIdAsync(id, userId);
-            if (box == null) return false;
-
+            if (box == null) return (false, "الصندوق غير موجود");
+        
+            if (box.Currency != currency)
+            {
+                bool hasTransfers = await _context.Transfers.AnyAsync(t => t.FromBoxId == id || t.ToBoxId == id);
+                if (hasTransfers)
+                    return (false, "لا يمكن تغيير عملة هذا الصندوق لوجود حوالات مرتبطة به");
+            }
+        
             box.Name = name;
-           // box.Currency = currency;
+            box.Currency = currency;
             await _context.SaveChangesAsync();
-            return true;
+            return (true, "تم تعديل الصندوق بنجاح");
         }
 
         public async Task<(bool Success, string Message)> DeleteAsync(int id, string userId)

@@ -40,13 +40,26 @@
 
                         <!-- العملة (للعرض فقط) -->
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">العملة</label>
-                            <div class="locked-field">
-                                <span><i class="bi bi-currency-exchange me-2"></i>@currencyText</span>
-                                <i class="bi bi-lock-fill text-muted"></i>
-                            </div>
-                            <small class="text-muted">لا يمكن تغيير عملة الصندوق بعد إنشائه، حفاظًا على دقة الأرصدة والحوالات.</small>
-                        </div>
+                           <label class="form-label fw-semibold mb-2">العملة</label>
+                                <div class="row g-3 mb-1">
+                                    <div class="col-6">
+                                        <input type="radio" class="btn-check" name="Currency" id="currencySYP" value="SYP"
+                                               checked="@(Model.Currency == "SYP")" />
+                                        <label class="currency-option card text-center p-3 h-100" for="currencySYP">
+                                            <i class="bi bi-cash-coin fs-3 mb-1"></i>
+                                            <span class="fw-bold">ليرة سورية</span><span class="text-muted small">SYP</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="radio" class="btn-check" name="Currency" id="currencyUSD" value="USD"
+                                               checked="@(Model.Currency == "USD")" />
+                                        <label class="currency-option card text-center p-3 h-100" for="currencyUSD">
+                                            <i class="bi bi-currency-dollar fs-3 mb-1"></i>
+                                            <span class="fw-bold">دولار أمريكي</span><span class="text-muted small">USD</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <small class="text-muted d-block mb-3">تغيير العملة لا يحوّل المبلغ الحالي، بل يغيّر وحدته فقط. لا يمكن التغيير إذا كان الصندوق مرتبطًا بحوالات سابقة.</small>
 
                         <!-- الرصيد (للعرض فقط) -->
                         <div class="mb-4">

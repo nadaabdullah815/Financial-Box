@@ -59,9 +59,15 @@ namespace FinancialBox.Controllers
             if (!ModelState.IsValid) return View(model);
 
             var userId = _userManager.GetUserId(User)!;
-            var success = await _boxService.UpdateAsync(model.Id, userId, model.Name, model.Currency);
-            if (!success) return NotFound();
+            var (success, message) = await _boxService.UpdateAsync(model.Id, userId, model.Name, model.Currency);
 
+            if (!success)
+            {
+                TempData["ErrorMessage"] = message;
+                return RedirectToAction(nameof(Index));
+            }
+            
+            TempData["SuccessMessage"] = message;
             return RedirectToAction(nameof(Index));
         }
 

@@ -43,17 +43,10 @@
             {
                 var (icon, colorClass) = GetBoxStyle(box.Name);
                 <div class="col-md-4 col-lg-3">
-                    <div class="card box-card h-100 border-0 shadow-sm position-relative">
-                        @if (box.IsDefault)
-                        {
-                            <span class="badge bg-secondary position-absolute top-0 end-0 m-2">
-                                <i class="bi bi-shield-check me-1"></i>أساسي
-                            </span>
-                        }
+                   <div class="card box-card h-100 border-0 shadow-sm position-relative">
+                        <div class="box-banner @colorClass"><i class="bi @icon"></i></div>
+                        @if (box.IsDefault) { <span class="badge bg-secondary position-absolute top-0 end-0 m-2">أساسي</span> }
                         <div class="card-body">
-                            <div class="icon-circle-lg @colorClass mb-3">
-                                <i class="bi @icon fs-3"></i>
-                            </div>
                             <span class="badge bg-light text-dark border mb-2">@box.Currency</span>
                             <h5 class="fw-bold mb-1">@box.Name</h5>
                             <div class="fs-4 fw-bold text-success mb-2">@box.Balance.ToString("N2")</div>
@@ -92,16 +85,15 @@
 </div>
 
 @functions {
-    (string Icon, string ColorClass) GetBoxStyle(string name) => name switch
+    (string Icon, string GradientClass) GetBoxStyle(string name) => name switch
     {
-        "شام كاش" => ("bi-bank2", "bg-primary-subtle text-primary"),
-        "سيرياتيل كاش" => ("bi-phone-fill", "bg-danger-subtle text-danger"),
-        "النقدي للمنزل" => ("bi-house-heart-fill", "bg-warning-subtle text-warning"),
-        "تسوية الديون" => ("bi-clipboard2-check-fill", "bg-info-subtle text-info"),
-        _ => ("bi-wallet-fill", "bg-success-subtle text-success")
+        "شام كاش" => ("bi-bank2", "grad-shamcash"),
+        "سيرياتيل كاش" => ("bi-phone-fill", "grad-syriatel"),
+        "النقدي للمنزل" => ("bi-house-heart-fill", "grad-home"),
+        "تسوية الديون" => ("bi-clipboard2-check-fill", "grad-debt"),
+        _ => ("bi-wallet-fill", "grad-custom")
     };
 }
-
 <style>
     .icon-circle-lg {
         width: 60px;
@@ -121,4 +113,17 @@
         transform: translateY(-3px);
         box-shadow: 0 10px 24px rgba(0,0,0,0.1) !important;
     }
+    .box-banner {
+    height: 70px; border-radius: 14px 14px 0 0; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    }
+    .box-banner i { font-size: 2.2rem; color: rgba(255,255,255,.9); }
+    .box-banner::after {
+        content: ""; position: absolute; inset: 0; background: rgba(255,255,255,.08);
+    }
+    .grad-shamcash { background: linear-gradient(135deg, #0d6efd, #0a4fb0); }
+    .grad-syriatel { background: linear-gradient(135deg, #e4002b, #a10021); }
+    .grad-home     { background: linear-gradient(135deg, #ffb703, #e08e00); }
+    .grad-debt     { background: linear-gradient(135deg, #17a2b8, #0f7080); }
+    .grad-custom   { background: linear-gradient(135deg, #146c43, #0f5132); }
 </style>

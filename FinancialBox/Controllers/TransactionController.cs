@@ -28,17 +28,19 @@ namespace FinancialBox.Controllers
         }
 
         // عرض كل عمليات صندوق معين
-        public async Task<IActionResult> Index(int boxId)
-        {
-            var userId = _userManager.GetUserId(User)!;
-            var transactions = await _transactionService.GetBoxTransactionsAsync(boxId, userId);
-
-            ViewBag.BoxId = boxId;
-            return View(transactions);
-        }
+       public async Task<IActionResult> Index(int boxId)
+       {
+           var userId = _userManager.GetUserId(User)!;
+           var transactions = await _transactionService.GetBoxTransactionsAsync(boxId, userId);
+           var box = await _context.FinancialBoxes.FirstOrDefaultAsync(b => b.Id == boxId && b.UserId == userId);
+       
+           ViewBag.BoxId = boxId;
+           ViewBag.Box = box;
+           return View(transactions);
+       }
 
         [HttpGet]
-        public async Task<IActionResult> Create(int boxId)
+        public async Task<IActionResult> Create(int boxId= 0, string? type = null)
         {
             var userId = _userManager.GetUserId(User)!;
 
@@ -50,10 +52,21 @@ namespace FinancialBox.Controllers
                     .Where(c => c.UserId == null || c.UserId == userId)
                     .ToListAsync()
             };
-
+              await FillListsAsync(model, userId);
             return View(model);
         }
 
+        private async Task FillListsAsync(TransactionViewModel model, string userId)
+{
+    model.UserBoxes = await _context.FinancialBoxes
+        .Where(b => b.UserId == userId)
+        .OrderBy(b => b.Id)
+        .ToListAsync();
+
+    model.Categories = await _context.Categories
+        .Where(c => c.UserId == null || c.UserId == userId)
+        .ToListAsync();
+}
         [HttpPost]
         public async Task<IActionResult> Create(TransactionViewModel model)
         {
