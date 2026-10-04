@@ -28,6 +28,7 @@ namespace FinancialBox.Services
         public async Task<(bool Success, string Message)> CreateAsync(
             string userId, int fromBoxId, int toBoxId, decimal amount, DateTime date, string? description)
         {
+            
             if (amount <= 0)
                 return (false, "المبلغ يجب أن يكون أكبر من صفر");
 
@@ -42,6 +43,9 @@ namespace FinancialBox.Services
 
             if (fromBox == null || toBox == null)
                 return (false, "أحد الصندوقين غير موجود أو لا يخصك");
+
+            if (fromBox.IsDebtBox || toBox.IsDebtBox)
+                return (false, "لا يمكن إجراء حوالة من/إلى صندوق الديون؛ استخدمي صفحة تسجيل العمليات بدلًا من ذلك");
 
             if (fromBox.Currency != toBox.Currency)
                 return (false, "لا يمكن التحويل بين صندوقين بعملتين مختلفتين");

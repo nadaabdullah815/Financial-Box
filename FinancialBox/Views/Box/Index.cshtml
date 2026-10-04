@@ -51,6 +51,12 @@
                             <h5 class="fw-bold mb-1">@box.Name</h5>
                             <div class="fs-4 fw-bold text-success mb-2">@box.Balance.ToString("N2")</div>
 
+                            @if (box.IsDebtBox)
+                            {
+                                <div class="alert alert-info py-1 px-2 mb-2 small">
+                                    <i class="bi bi-info-circle-fill me-1"></i> صندوق خاص، مستبعد من حسابات التقارير العامة
+                                </div>
+                            }
                             @if (box.TargetAmount.HasValue && box.TargetAmount > 0)
                             {
                                 var progress = Math.Min(100, (double)(box.Balance / box.TargetAmount.Value) * 100);

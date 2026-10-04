@@ -2,7 +2,7 @@
 @using System.Globalization
 @{
     ViewData["Title"] = "حوالة جديدة";
-    var boxes = Model.Boxes ?? new List<FinancialBox.Models.Box>();
+      var boxes = (Model.Boxes ?? new List<FinancialBox.Models.Box>()).Where(b => !b.IsDebtBox).ToList();
 }
 
 <div class="container py-4" style="max-width: 920px;">

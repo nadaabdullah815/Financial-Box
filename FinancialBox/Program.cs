@@ -34,6 +34,7 @@ builder.Services.AddScoped<IBoxService, BoxService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ITransferService, TransferService>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 var app = builder.Build();
 

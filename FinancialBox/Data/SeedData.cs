@@ -38,7 +38,7 @@ namespace FinancialBox.Data
                 new Box { Name = "شام كاش", Currency = "SYP", Balance = 0,IsDefault = true, UserId = userId },
                 new Box { Name = "سيرياتيل كاش", Currency = "SYP", Balance = 0,IsDefault = true, UserId = userId },
                 new Box { Name = "النقدي للمنزل", Currency = "SYP", Balance = 0,IsDefault = true, UserId = userId },
-                new Box { Name = "تسوية الديون", Currency = "SYP", Balance = 0,IsDefault = true, TargetAmount = null, UserId = userId },
+               new Box { Name = "تسوية الديون", Currency = "SYP", Balance = 0, TargetAmount = null, IsDefault = true, IsDebtBox = true, UserId = userId },
             };
 
             context.FinancialBoxes.AddRange(defaultBoxes);

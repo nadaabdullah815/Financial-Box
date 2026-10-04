@@ -41,7 +41,7 @@ public class AccountController : Controller
              await SeedData.SeedDefaultBoxesAsync(_context, user.Id);
              
             await _signInManager.SignInAsync(user, isPersistent: false);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         foreach (var error in result.Errors)
@@ -61,7 +61,7 @@ public class AccountController : Controller
         var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password,  isPersistent: true, lockoutOnFailure: false);
 
         if (result.Succeeded)
-            return RedirectToAction("Index", "Box");
+            return RedirectToAction("Index", "Dashboard");
 
         ModelState.AddModelError("", "بيانات الدخول غير صحيحة");
         return View(model);
@@ -71,7 +71,7 @@ public class AccountController : Controller
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Login", "Account");
     }
 
 }

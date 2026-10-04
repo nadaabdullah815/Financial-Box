@@ -231,3 +231,9 @@ body {
     padding-right: 10px;
     margin: 1.8rem 0 1rem;
 }
+.main-navbar {
+    background: linear-gradient(90deg, #146c43, #0f5132);
+    z-index: 1030;
+}
+.main-navbar .nav-link { font-weight: 600; opacity: .9; }
+.main-navbar .nav-link:hover { opacity: 1; }
