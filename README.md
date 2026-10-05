@@ -1,124 +1,133 @@
-#  Financial Box | الصندوق المالي
+# Financial Box 
 
-نظام ويب لإدارة الصناديق المالية الشخصية والتجارية، يساعد المستخدم على تتبع إيراداته ومصاريفه بدقة، وإدارة أكثر من صندوق مالي في مكان واحد بدلًا من الاعتماد على دفاتر ورقية أو ملفات Excel متفرقة.
+A web-based system for managing personal and small-business financial funds. It helps users accurately track their income and expenses and manage multiple financial boxes in one place instead of relying on paper records or separate Excel files.
 
-تم بناء المشروع بشكل فردي (Frontend + Backend + Database) كمشروع تدريب عملي باستخدام **ASP.NET Core MVC**.
-
----
-
-##  الميزات الرئيسية
-
-### إدارة الحساب
-- تسجيل حساب جديد وتسجيل دخول آمن عبر ASP.NET Identity
-- جلسة دخول دائمة لا تنتهي إلا بتسجيل الخروج يدويًا
-
-### الصناديق المالية
-- إنشاء صناديق مالية متعددة بعملتين مدعومتين (ليرة سورية / دولار أمريكي)
-- أربعة صناديق افتراضية تُنشأ تلقائيًا لكل مستخدم عند التسجيل: **شام كاش**، **سيرياتيل كاش**، **النقدي للمنزل**، و**تسوية الديون**
-- حماية الصناديق الأساسية من الحذف أو التعديل غير المقصود
-- صندوق الديون مستقل عن حسابات التقارير العامة، مع واجهة وتسميات مخصّصة له (دين / سداد دفعة) وشريط تقدّم نحو هدف السداد
-
-### العمليات المالية
-- تسجيل عمليات إيراد ومصروف مرتبطة بصندوق وتصنيف معيّن
-- تحديث الرصيد تلقائيًا داخل معاملة قاعدة بيانات موحّدة (Database Transaction) لضمان تناسق البيانات
-- تصنيفات افتراضية جاهزة للإيرادات والمصاريف، مع إمكانية إضافة تصنيفات خاصة بالمستخدم
-
-### الحوالات الداخلية
-- تحويل الأموال بين صناديق المستخدم نفسه بنفس العملة
-- تحديث رصيد الصندوقين معًا ضمن معاملة واحدة لضمان عدم فقدان أو تكرار أي مبلغ
-
-### التقارير
-- قوائم الإيرادات والمصاريف حسب فترة زمنية محددة
-- أرصدة جميع الصناديق الحالية
-- تجميع الإيرادات والمصاريف حسب التصنيف مع نسب مئوية
-
-### لوحة التحكم الرئيسية (Dashboard)
-- ملخص سريع عن إيرادات ومصاريف الشهر الحالي
-- آخر العمليات المسجّلة
-- روابط تنقّل سريعة لجميع أقسام النظام
+The project was developed individually (**Frontend + Backend + Database**) as a practical training project using **ASP.NET Core MVC**.
 
 ---
 
-##  التقنيات المستخدمة
+## Main Features
 
-| التقنية | الاستخدام |
-|---|---|
-| ASP.NET Core MVC (.NET) | بنية المشروع الأساسية (Backend + Frontend في مشروع واحد) |
-| Entity Framework Core | التعامل مع قاعدة البيانات |
-| SQL Server | قاعدة البيانات |
-| ASP.NET Identity | تسجيل الحسابات والمصادقة |
-| Bootstrap 5 + Bootstrap Icons | تصميم الواجهات |
-| JavaScript | التفاعل الديناميكي بالواجهات (ملخصات حية، تبديل الخيارات، إلخ) |
+### Account Management
+
+* User registration and secure login using ASP.NET Identity.
+* Persistent login sessions that remain active until the user manually logs out.
+
+### Financial Boxes
+
+* Create multiple financial boxes with support for two currencies: **Syrian Pound (SYP) / US Dollar (USD)**.
+* Four default boxes are automatically created for each user upon registration: **Sham Cash**, **Syriatel Cash**, **Home Cash**, and **Debt Settlement**.
+* Protection of default boxes from accidental deletion or modification.
+* The debt box is independent from the general reporting accounts, with a dedicated interface and terminology (**Debt / Payment**) and a progress bar toward the repayment target.
+
+### Financial Transactions
+
+* Record income and expense transactions linked to a specific box and category.
+* Automatically update the box balance within a single **Database Transaction** to ensure data consistency.
+* Predefined default income and expense categories, with the ability for users to add their own custom categories.
+
+### Internal Transfers
+
+* Transfer money between the user's own boxes using the same currency.
+* Update both box balances within a single transaction to prevent money loss or duplication.
+
+### Reports
+
+* Income and expense lists filtered by a specific date range.
+* Current balances of all financial boxes.
+* Income and expense aggregation by category with percentage breakdowns.
+
+### Main Dashboard
+
+* Quick summary of the current month's income and expenses.
+* Latest recorded transactions.
+* Quick navigation links to all system sections.
 
 ---
 
-##  البنية المعمارية
+## Technologies Used
 
-المشروع مبني على نمط ثلاثي الطبقات:
+| Technology                    | Usage                                                            |
+| ----------------------------- | ---------------------------------------------------------------- |
+| ASP.NET Core MVC (.NET)       | Main project architecture (Backend + Frontend in one project)    |
+| Entity Framework Core         | Database interaction                                             |
+| SQL Server                    | Database                                                         |
+| ASP.NET Identity              | User authentication and account management                       |
+| Bootstrap 5 + Bootstrap Icons | User interface design                                            |
+| JavaScript                    | Dynamic UI interactions (live summaries, option switching, etc.) |
 
-```
+---
+
+## Architecture
+
+The project follows a three-layer architecture:
+
+```text
 Controller → Service → DbContext → Database
 ```
 
-- **Controller**: يستقبل الطلب من المستخدم فقط، بدون أي منطق حسابي
-- **Service**: يحتوي كل منطق العمل (الحسابات، التحقق من الشروط، قواعد العمل)
-- **DbContext (EF Core)**: الجسر بين الكود وقاعدة البيانات
+* **Controller**: Handles user requests only, without business or calculation logic.
+* **Service**: Contains all business logic, calculations, validations, and business rules.
+* **DbContext (EF Core)**: Acts as the bridge between the application and the database.
 
-### الكيانات الأساسية
+### Core Entities
 
-```
-ApplicationUser (المستخدم)
+```text
+ApplicationUser (User)
+
     │
-    ├── Box (الصناديق المالية) — كل صندوق مالكه مستخدم واحد
-    │     └── Transaction (العمليات المالية)
+    ├── Box (Financial Boxes) — Each box belongs to one user
+    │     └── Transaction (Financial Transactions)
     │
-    ├── Category (التصنيفات) — مشتركة أو خاصة بالمستخدم
+    ├── Category — Shared or user-specific categories
     │     └── Transaction
     │
-    └── Transfer (الحوالات الداخلية) — بين صندوقين لنفس المستخدم
+    └── Transfer — Internal transfers between the user's boxes
 ```
 
-### قواعد العمل الأساسية
-- لا يُقبل أي مبلغ أقل من أو يساوي صفر
-- كل عملية مالية مرتبطة إلزاميًا بصندوق وتصنيف
-- المستخدم لا يصل إلا إلى بياناته الخاصة فقط
-- تحديث الرصيد وحفظ العملية يتمان معًا ضمن معاملة واحدة لمنع تضارب البيانات
+### Core Business Rules
+
+* Amounts less than or equal to zero are not accepted.
+* Every financial transaction must be associated with a box and a category.
+* Users can access only their own data.
+* Updating the balance and saving the transaction are performed within a single transaction to prevent data inconsistencies.
 
 ---
 
-##  خطوات التشغيل محليًا
+## Local Setup
 
 ```bash
-# استنساخ المشروع
+# Clone the repository
 git clone <repository-url>
+
 cd FinancialBox
 
-# استرجاع الحزم
+# Restore packages
 dotnet restore
 
-# تحديث سلسلة الاتصال بقاعدة البيانات في appsettings.json
+# Update the database connection string in appsettings.json
 # "ConnectionStrings": { "DefaultConnection": "..." }
 
-# تطبيق الـ Migrations
+# Apply migrations
 dotnet ef database update
 
-# تشغيل المشروع
+# Run the project
 dotnet run
 ```
 
 ---
 
-##  ملاحظات ومحدوديات معروفة
+## Known Limitations
 
-- المشروع نظام توثيق مالي وليس محفظة إلكترونية حقيقية؛ لا يوجد ربط فعلي بحسابات بنكية أو خدمات دفع خارجية
-- لا يوجد حاليًا استرجاع لكلمة المرور (Forgot Password) ضمن النسخة الحالية
-- رفع المرفقات (صور الفواتير) والميزانية الشهرية ونسبة المقارنة بين الأشهر مؤجلة كتحسينات مستقبلية
+* The project is a financial record-keeping system, not a real electronic wallet. It does not connect to real bank accounts or external payment services.
+* Password recovery (**Forgot Password**) is not currently implemented.
+* Invoice/image attachments, monthly budgeting, and month-to-month comparison percentages are planned as future improvements.
 
 ---
 
-##  تحسينات مستقبلية مقترحة
+## Future Improvements
 
-- استرجاع كلمة المرور عبر البريد الإلكتروني
-- دعم رفع وإرفاق الفواتير والإيصالات
-- تحديد ميزانية شهرية ومقارنة الاستهلاك بالأشهر السابقة
-- تصدير التقارير بصيغة PDF أو Excel
+* Password recovery via email.
+* Upload and attach invoices and receipts.
+* Set a monthly budget and compare spending with previous months.
+* Export reports as PDF or Excel files.
